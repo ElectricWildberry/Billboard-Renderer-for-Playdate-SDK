@@ -54,34 +54,28 @@ function Camera:Move()
     self.input.dy = 0
 
     if pd.buttonIsPressed(pd.kButtonUp) then
-        --self.zpos = self.zpos  - self.speed / pd.display.getRefreshRate() 
         self.input.dy = -1
     end
 
     if pd.buttonIsPressed(pd.kButtonDown) then
-        --self.zpos = self.zpos + self.speed / pd.display.getRefreshRate()
         self.input.dy = 1
     end 
 
     if pd.buttonIsPressed(pd.kButtonRight) then
-        --self.xpos = self.xpos + self.speed / pd.display.getRefreshRate()
         self.input.dx = 1
     end
 
     if pd.buttonIsPressed(pd.kButtonLeft) then
-        --self.xpos = self.xpos - self.speed / pd.display.getRefreshRate()
         self.input.dx = -1
     end
-
-    --local finalDir = geo.vector2D.new(0,0)
 
     self.currentDir:normalize()
     self.dirRight:normalize()
     self.input:normalize()
 
-    self.zpos = self.zpos + (self.currentDir.dy * self.input.dy) * self.speed / rf --rf is a global variable for the current framerate
-    self.xpos = self.xpos + (self.currentDir.dx * -self.input.dy) * self.speed / rf
-    self.zpos = self.zpos + (self.dirRight.dy * self.input.dx) * self.speed / rf
-    self.xpos = self.xpos + (self.dirRight.dx * self.input.dx) * self.speed / rf
+    self.zpos = self.zpos + (self.currentDir.dy * self.input.dy) * self.speed / pd.display.getRefreshRate() 
+    self.xpos = self.xpos + (self.currentDir.dx * -self.input.dy) * self.speed / pd.display.getRefreshRate()  -- calling pd.display.getRefreshRate() once somewhere else, then calling the variable is much better, as this actually takes a bit of time
+    self.zpos = self.zpos + (self.dirRight.dy * self.input.dx) * self.speed / pd.display.getRefreshRate() 
+    self.xpos = self.xpos + (self.dirRight.dx * self.input.dx) * self.speed / pd.display.getRefreshRate() 
 
 end
