@@ -26,3 +26,8 @@ Create a sprite (or whatever you're using) and create a reference for the "3d mo
 You can access and change variables within the 3d object at anytime. This can be used, for example, enemies or npcs that move, bullets the player shoots, or anything animated within the game scene. Changing images is also possible, which allows for animation too. (Animation should be done on an object basis instead of a billboard basis, so not too many timers are present at once)
 
 (When animating a 3d object, make sure all sprites are the same size (at least in height), otherwise sprites will be misalligned.)
+
+# Using in a project
+
+You may use this code in any project and modify it in any way you need to.
+This code is under the CC0 License.
