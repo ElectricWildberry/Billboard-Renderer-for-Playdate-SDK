@@ -14,9 +14,13 @@ All projects must have a global "Renderer". All objects using 3D need to access 
 
 display scale must be set to (2). (display scale 1 is possible, however performance will dip to lower 20s and maybe lower depending on how many objects are being rendered at once)
 
+All scenes using a 3d renderer must include a "camera". Variables such as camera position, and rotation are needed to calculate perspective positions of all objects. Both position and rotation can be set / modified to the developer's needs. (i.e. using the dpad to turn instead of the crank)
+
 # To add a 3D object to your scene:
 
 Create a sprite (or whatever you're using) and create a reference for the "3d model". This is where the actual 3d object will be stored, and becomes a future reference for your object when needed. Next, punch in the coordinates, and input an image, and the object is ready to go.
+
+(When animating a 3d object, make sure all sprites are the same size (at least in height), otherwise sprites will be misalligned.)
 
 # Changing 3d object attributes in run time:
 
