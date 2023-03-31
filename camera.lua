@@ -2,49 +2,32 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local geo <const> = pd.geometry
 
-import "UI/MechUI"
-import "Weapons/Bullet"
-import "Mech/MechWeaponSystem"
-
 class('Camera').extends(gfx.sprite)
 
-function Camera:init(x, y, z)
+function Camera:init(x, y, z) --do be careful that y is inverted.
+			      -- also, x position need to be inverted when using playdate coordinates (i.e. collision library and sprite.moveTo, movewithCollisions)
 
     self:moveTo(x, z)
 
-    --collision
-    self:setCollideRect(-10, -10, 20, 20)
-	self.collisionResponse = 'slide'
-	self:setCollidesWithGroups({4})
-    --collision
-
     --aiming
-    self.currentDir = geo.vector2D.new(0, 0)
-    self.dirRight = geo.vector2D.new(0, 0)
-    self.input = geo.vector2D.new(0, 0)
+    self.currentDir = geo.vector2D.new(0, 0) -- this stores the direction (forward) of the camera as a 2d vector
+    self.dirRight = geo.vector2D.new(0, 0) -- this stores the right direction (forward + 90) of the camera as a 2d vector
+    self.input = geo.vector2D.new(0, 0) -- this stores the input of the user (2d vector is used so functions like "normalize" can be utilized)
     --aiming
 
     --rendering
     self.xpos = x
-    self.ypos = y
+    self.ypos = y -- these variables must be changed at runtime in order to move the camera. using self:moveTo will not.
     self.zpos = z
 
-    self.far = 400
-    self.near = 10
-    self.angle = 0
+    self.far = 400 --far plane
+    self.near = 10 --newar plane
+    self.angle = 0 --crank angle
     --rendering
 
     --movement
-    self.speed = 70
+    self.speed = 70 --how fast the camera moves (you can tie the camera to a player sprite and not use this variable instead)
     --movement
-
-    --shooting
-    self.shotCooldown = 1
-    self.currentCooldown = 0
-    --shooting
-
-    self.ui = MechUI()
-    self.weapons = nil
 
     self:add()
     
@@ -52,8 +35,7 @@ end
 
 function Camera:update()
 
-    self:Move()
-    self:Shoot()
+    self:Move() --putting move logic in a function to declutter (in case you want to expand this)
     
 end
 
@@ -74,29 +56,21 @@ function Camera:Move()
     if pd.buttonIsPressed(pd.kButtonUp) then
         --self.zpos = self.zpos  - self.speed / pd.display.getRefreshRate() 
         self.input.dy = -1
-        
-        self.ui:animate()
     end
 
     if pd.buttonIsPressed(pd.kButtonDown) then
         --self.zpos = self.zpos + self.speed / pd.display.getRefreshRate()
         self.input.dy = 1
-
-        self.ui:animate()
     end 
 
     if pd.buttonIsPressed(pd.kButtonRight) then
         --self.xpos = self.xpos + self.speed / pd.display.getRefreshRate()
         self.input.dx = 1
-
-        self.ui:animate()
     end
 
     if pd.buttonIsPressed(pd.kButtonLeft) then
         --self.xpos = self.xpos - self.speed / pd.display.getRefreshRate()
         self.input.dx = -1
-
-        self.ui:animate()
     end
 
     --local finalDir = geo.vector2D.new(0,0)
@@ -105,37 +79,9 @@ function Camera:Move()
     self.dirRight:normalize()
     self.input:normalize()
 
-    self.zpos = self.zpos + (self.currentDir.dy * self.input.dy) * self.speed / rf
+    self.zpos = self.zpos + (self.currentDir.dy * self.input.dy) * self.speed / rf --rf is a global variable for the current framerate
     self.xpos = self.xpos + (self.currentDir.dx * -self.input.dy) * self.speed / rf
     self.zpos = self.zpos + (self.dirRight.dy * self.input.dx) * self.speed / rf
     self.xpos = self.xpos + (self.dirRight.dx * self.input.dx) * self.speed / rf
-
-    local actualX, actualY, collisions, length = self:moveWithCollisions(-self.xpos, self.zpos)
-
-    self.zpos = actualY
-    self.xpos = -actualX
-
-end
-
-function Camera:Shoot()
-
-    if pd.buttonJustPressed(pd.kButtonA) then
-        if not tb.showing then
-            local sprites = gfx.sprite.querySpritesAlongLine(self.x, self.y, self.x - self.currentDir.dx * 100, self.y - self.currentDir.dy * 100)
-            
-            for index, hit in ipairs(sprites) do
-                print(hit:getGroupMask())
-                if hit.tag == "npc" then
-                    hit:Speak()
-                end
-                if hit.tag == "Door" then
-                    hit:Switch()
-                end
-            end
-        end
-
-    end
-
-    self.currentCooldown -= 1 / pd.display.getRefreshRate()
 
 end
