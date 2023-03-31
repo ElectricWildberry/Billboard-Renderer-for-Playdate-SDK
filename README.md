@@ -20,8 +20,9 @@ All scenes using a 3d renderer must include a "camera". Variables such as camera
 
 Create a sprite (or whatever you're using) and create a reference for the "3d model". This is where the actual 3d object will be stored, and becomes a future reference for your object when needed. Next, punch in the coordinates, and input an image, and the object is ready to go.
 
-(When animating a 3d object, make sure all sprites are the same size (at least in height), otherwise sprites will be misalligned.)
 
 # Changing 3d object attributes in run time:
 
 You can access and change variables within the 3d object at anytime. This can be used, for example, enemies or npcs that move, bullets the player shoots, or anything animated within the game scene. Changing images is also possible, which allows for animation too. (Animation should be done on an object basis instead of a billboard basis, so not too many timers are present at once)
+
+(When animating a 3d object, make sure all sprites are the same size (at least in height), otherwise sprites will be misalligned.)
